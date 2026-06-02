@@ -8,3 +8,5 @@ output "alb_dns_name" {
   description = "The public URL of your Load Balancer"
   value       = aws_lb.app_alb.dns_name
 }
+
+# Triggering the infrastructure pipeline
