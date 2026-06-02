@@ -34,8 +34,16 @@ resource "aws_ecs_service" "python_app_service" {
   desired_count = 1
 
   network_configuration {
-    subnets = [ aws_subnet.main_subnet.id ]
+    subnets = [ aws_subnet.main_subnet.id, aws_subnet.secondary_subnet.id ]
     security_groups = [ aws_security_group.ecs_sg.id ]
     assign_public_ip = true
   }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app_tg.arn
+    container_name   = "welcome-app-container"
+    container_port   = 3000
+  }
+  # Ensures ALB is created before service usage
+  depends_on = [aws_lb_listener.http_listener]
 }

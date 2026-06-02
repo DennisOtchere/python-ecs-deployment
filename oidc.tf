@@ -34,37 +34,9 @@ resource "aws_iam_role" "github_actions_role" {
 }
 
 
-resource "aws_iam_role_policy" "app_deploy_policy" {
-  name = "github-actions-app-deploy-policy"
-  role = aws_iam_role.github_actions_role.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          # Permission to log in and push Docker images
-          "ecr:GetAuthorizationToken",
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:GetDownloadUrlForLayer",
-          "ecr:GetRepositoryPolicy",
-          "ecr:DescribeRepositories",
-          "ecr:ListImages",
-          "ecr:DescribeImages",
-          "ecr:BatchGetImage",
-          "ecr:InitiateLayerUpload",
-          "ecr:UploadLayerPart",
-          "ecr:CompleteLayerUpload",
-          "ecr:PutImage",
-          
-          # Permission to force a reboot on ECS
-          "ecs:UpdateService",
-          "ecs:DescribeServices"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
+resource "aws_iam_role_policy_attachment" "github_actions_admin" {
+  role       = aws_iam_role.github_actions_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess" 
 }
+
 
