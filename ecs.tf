@@ -7,7 +7,7 @@ resource "aws_ecs_task_definition" "python_app_task" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
   memory                   = "512"
-  execution_role_arn = aws_iam_role.ecs_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_execution_role.arn
 
   container_definitions = jsonencode([
     {
@@ -23,19 +23,19 @@ resource "aws_ecs_task_definition" "python_app_task" {
       ]
     }
   ])
-  
+
 }
 
 resource "aws_ecs_service" "python_app_service" {
-    name = "python-app-service-name"
-  cluster = aws_ecs_cluster.python_app_cluster.id
+  name            = "python-app-service-name"
+  cluster         = aws_ecs_cluster.python_app_cluster.id
   task_definition = aws_ecs_task_definition.python_app_task.arn
-  launch_type = "FARGATE"
-  desired_count = 1
+  launch_type     = "FARGATE"
+  desired_count   = 1
 
   network_configuration {
-    subnets = [ aws_subnet.main_subnet.id, aws_subnet.secondary_subnet.id ]
-    security_groups = [ aws_security_group.ecs_sg.id ]
+    subnets          = [aws_subnet.main_subnet.id, aws_subnet.secondary_subnet.id]
+    security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = true
   }
 

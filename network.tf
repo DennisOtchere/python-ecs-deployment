@@ -1,57 +1,57 @@
 resource "aws_vpc" "main_vpc" {
-    cidr_block = "10.0.0.0/16"
+  cidr_block = "10.0.0.0/16"
 }
 
 # Zone A
 resource "aws_subnet" "main_subnet" {
-    vpc_id     = aws_vpc.main_vpc.id
-    cidr_block = "10.0.1.0/24"
-    availability_zone = "us-east-1a"
+  vpc_id            = aws_vpc.main_vpc.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
 }
 
 # Zone B (ALB)
 resource "aws_subnet" "secondary_subnet" {
-    vpc_id     = aws_vpc.main_vpc.id
-    cidr_block = "10.0.2.0/24"
-    availability_zone = "us-east-1b"
+  vpc_id            = aws_vpc.main_vpc.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "us-east-1b"
 }
 
 resource "aws_security_group" "alb_sg" {
-    name        = "alb_security_group"
-    description = "Allow inbound HTTP traffic to ALB"
-    vpc_id      = aws_vpc.main_vpc.id
+  name        = "alb_security_group"
+  description = "Allow inbound HTTP traffic to ALB"
+  vpc_id      = aws_vpc.main_vpc.id
 
-    ingress {
-        from_port   = 80
-        to_port     = 80
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-    egress {
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_security_group" "ecs_sg" {
-    name        = "ecs_security_group"
-    description = "Allow inbound traffic ONLY from ALB"
-    vpc_id      = aws_vpc.main_vpc.id
+  name        = "ecs_security_group"
+  description = "Allow inbound traffic ONLY from ALB"
+  vpc_id      = aws_vpc.main_vpc.id
 
-    ingress {
-        from_port       = 3000
-        to_port         = 3000
-        protocol        = "tcp"
-        security_groups = [aws_security_group.alb_sg.id] 
-    }
-    egress {
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    from_port       = 3000
+    to_port         = 3000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_internet_gateway" "main_igw" {
