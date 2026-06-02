@@ -550,16 +550,7 @@ echo $AWS_REGION
 
 ## 📄 License
 
-[Specify your license - MIT, Apache 2.0, GPL, etc.]
-
-## 👨‍💻 Contributing
-
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+[MIT]
 
 ---
 
